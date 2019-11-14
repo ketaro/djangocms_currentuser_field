@@ -13,20 +13,20 @@ When you build your form, you can select to save the user's:
 Installation
 ------------
 
-1. Install via pip:
+1. Install via pip::
 
-  pip install djangocms-currentuser-field
+    pip install djangocms-currentuser-field
   
-2. Add to your ``INSTALLED_APPS`` (in ``settings.py``):
+2. Add to your ``INSTALLED_APPS`` (in ``settings.py``)::
 
-  INSTALLED_APPS = (
+    INSTALLED_APPS = (
     ...
-    'djangocms-currentuser-field',
+     'djangocms-currentuser-field',
     ...
-  )
+    )
+        
+3. Run migrations::
 
-3. Run migrations:
-
-  python manage.py migrate djangocms-current-user
+    python manage.py migrate djangocms-current-user
 
 4. "Current User Field" should now be available as a plugin in the CMS when you build a form!
