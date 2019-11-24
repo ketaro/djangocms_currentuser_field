@@ -59,10 +59,16 @@ class CurrentUserField(Field):
         user = request.user
         
         if instance.initial_value == 'username':
-            return user.username
+            try:
+                return user.username
+            except AttributeError:
+                return None
 
         elif instance.initial_value == 'email':
-            return user.email
+            try:
+               return user.email
+            except AttributeError:
+                return None
 
         elif instance.initial_value == 'userid':
             try:
@@ -75,10 +81,16 @@ class CurrentUserField(Field):
             return user.id
 
         elif instance.initial_value == 'firstlast':
-            return ' '.join([user.first_name, user.last_name])
+            try:
+                return ' '.join([user.first_name, user.last_name])
+            except AttributeError:
+                return None
 
         elif instance.initial_value == 'lastfirst':
-            return ', '.join([user.last_name, user.first_name])
+            try:
+                return ', '.join([user.last_name, user.first_name])
+            except AttributeError:
+                return None
         
         return None
 
