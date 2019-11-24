@@ -24,6 +24,10 @@ Installation
      'djangocms-currentuser-field',
     ...
     )
+
+    # Optional, if you'd like to use a subclass (1:1 relationship) attached
+    # to user for the user id field, specify below
+    CURRENTUSER_FIELD_USER_SUBCLASS = 'staff'
         
 3. Run migrations::
 

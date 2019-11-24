@@ -3,6 +3,7 @@ from aldryn_forms.forms import ExtandableErrorForm
 from cms.plugin_pool import plugin_pool
 from django import forms
 from django.utils.translation import ugettext as _
+from django.conf import settings
 
 from .models import CurrentUserFieldPlugin
 
@@ -59,12 +60,23 @@ class CurrentUserField(Field):
         
         if instance.initial_value == 'username':
             return user.username
+
         elif instance.initial_value == 'email':
             return user.email
+
         elif instance.initial_value == 'userid':
+            try:
+                use_subclass = settings.CURRENTUSER_FIELD_USER_SUBCLASS
+                if use_subclass and hasattr(user, use_subclass):
+                    return getattr(user, use_subclass).id
+            except AttributeError:
+                pass
+
             return user.id
+
         elif instance.initial_value == 'firstlast':
             return ' '.join([user.first_name, user.last_name])
+
         elif instance.initial_value == 'lastfirst':
             return ', '.join([user.last_name, user.first_name])
         
