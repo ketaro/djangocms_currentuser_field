@@ -72,12 +72,15 @@ class CurrentUserField(Field):
 
         elif instance.initial_value == 'userid':
             try:
+                # If we have a user class override set, use that
+                # for the user id
                 use_subclass = settings.CURRENTUSER_FIELD_USER_SUBCLASS
                 if use_subclass and hasattr(user, use_subclass):
                     return getattr(user, use_subclass).id
             except AttributeError:
                 pass
 
+            # Otherwise, it's the regular user id
             return user.id
 
         elif instance.initial_value == 'firstlast':
@@ -92,6 +95,18 @@ class CurrentUserField(Field):
             except AttributeError:
                 return None
         
+        else:   # a custom field
+            try:
+                return getattr(user, instance.initial_value)
+            except AttributeError:
+                pass
+
+            try:
+                user_subclass = getattr(user, settings.CURRENTUSER_FIELD_USER_SUBCLASS)
+                return getattr(user_subclass, instance.initial_value)
+            except AttributeError:
+                pass
+
         return None
 
 

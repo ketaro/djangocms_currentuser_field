@@ -28,7 +28,13 @@ Installation
     # Optional, if you'd like to use a subclass (1:1 relationship) attached
     # to user for the user id field, specify below
     CURRENTUSER_FIELD_USER_SUBCLASS = 'staff'
-        
+
+    # Optional, if you'd like to specify a custom fields off the user or
+    # sub-user class, set a list of tuples:
+    CURRENTUSER_FIELD_CUSTOM_VALUES = [
+        ('canvote', 'Voting Status')
+    ]
+
 3. Run migrations::
 
     python manage.py migrate djangocms-current-user

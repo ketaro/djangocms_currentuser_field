@@ -1,7 +1,7 @@
 from aldryn_forms.models import FieldPluginBase
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-
+from django.conf import settings
 
 FIELD_CHOICES = [
     ('userid',      'User ID'),
@@ -11,6 +11,10 @@ FIELD_CHOICES = [
     ('email',       'Email Address')
 ]
 
+try:
+    FIELD_CHOICES += settings.CURRENTUSER_FIELD_CUSTOM_VALUES
+except AttributeError:
+    pass
 
 class CurrentUserFieldPlugin(FieldPluginBase):
     initial_value = models.CharField(
