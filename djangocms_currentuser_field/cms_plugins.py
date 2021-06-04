@@ -154,6 +154,28 @@ class CurrentUserEmailField(EmailField):
         field.disabled = True   # Don't let the user edit
 
         return field
+    
+    def get_value(self, request, instance):
+        """
+        Return the logged in user's email address if available
+        """
+        if not hasattr(request, 'user'):
+            return ""
+        
+        user = request.user
+
+        try:
+            return user.email
+        except AttributeError:
+            return None
+
+    def form_pre_save(self, instance, form, **kwargs):
+        """
+        Set the field value (don't use the user input)
+        """
+        request = kwargs['request']
+        field_name = form.form_plugin.get_form_field_name(field=instance)
+        form.cleaned_data[field_name] = self.get_value(request, instance)
 
     def render(self, context, instance, placeholder):
         """
@@ -168,7 +190,7 @@ class CurrentUserEmailField(EmailField):
             form_plugin = form.form_plugin
             field_name = form_plugin.get_form_field_name(field=instance)
             try:
-                form.fields[field_name].initial = context['request'].user.email
+                form.fields[field_name].initial = self.get_value(context['request'], instance) 
             except AttributeError:
                 pass
             context['field'] = form[field_name]
