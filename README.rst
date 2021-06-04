@@ -10,6 +10,8 @@ When you build your form, you can select to save the user's:
 * Email Address
 * Full Name
 
+A "Current User Email Field" is also available that provides the same funcationality of the Aldryn Forms Email Field, allowing you to send the user who submitted the form an email confirmation.
+
 Installation
 ------------
 

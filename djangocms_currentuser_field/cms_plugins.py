@@ -1,4 +1,4 @@
-from aldryn_forms.cms_plugins import Field
+from aldryn_forms.cms_plugins import Field, EmailField
 from aldryn_forms.forms import ExtandableErrorForm
 from cms.plugin_pool import plugin_pool
 from django import forms
@@ -133,3 +133,43 @@ class CurrentUserField(Field):
         request = kwargs['request']
         field_name = form.form_plugin.get_form_field_name(field=instance)
         form.cleaned_data[field_name] = self.get_value(request, instance)
+
+
+@plugin_pool.register_plugin
+class CurrentUserEmailField(EmailField):
+    """
+    Field to be used with aldryn-forms, overide the default email
+    field and set the email address value to be that of the currently
+    logged in user.
+    """
+    name = _('Current User Email Field')
+
+    def get_form_field(self, instance):
+        """
+        Customize the form field
+        """
+        field = super(EmailField, self).get_form_field(instance)
+
+        field.required = False
+        field.disabled = True   # Don't let the user edit
+
+        return field
+
+    def render(self, context, instance, placeholder):
+        """
+        Override default EmailField render behavior and set the initial
+        value of the field to be the current user's email address.
+        """
+        context = super(Field, self).render(context, instance, placeholder)
+
+        form = context.get('form')
+
+        if form and hasattr(form, 'form_plugin'):
+            form_plugin = form.form_plugin
+            field_name = form_plugin.get_form_field_name(field=instance)
+            try:
+                form.fields[field_name].initial = context['request'].user.email
+            except AttributeError:
+                pass
+            context['field'] = form[field_name]
+        return context

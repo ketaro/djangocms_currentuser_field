@@ -16,6 +16,7 @@ try:
 except AttributeError:
     pass
 
+
 class CurrentUserFieldPlugin(FieldPluginBase):
     initial_value = models.CharField(
         verbose_name=_('Selected value'),
